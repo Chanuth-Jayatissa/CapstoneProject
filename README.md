@@ -1,57 +1,64 @@
-Project Identity: AI Assessment Platform 
+# CapstoneProject
 
-https://capstone-project-teal-delta.vercel.app/
+CapstoneProject is an AI assessment platform that turns uploaded study PDFs into context-aware exams. It uses a Retrieval-Augmented Generation architecture to ingest documents, chunk content, generate embeddings, store vectors in Supabase/Postgres with pgvector, and support assessment generation workflows.
 
-Core Objective
-The platform is a scalable educational tool designed to process PDF study materials using Retrieval-Augmented Generation (RAG). It automatically generates context-aware examinations, including Multiple Choice Questions (MCQs), short answers, and grading rubrics. The system architecture is designed to transition into a Data-as-a-Service (DaaS) model, exposing a public API for educational datasets.
+Live app reference: https://capstone-project-teal-delta.vercel.app/
 
-Technical Stack
-AI and Inference
-Inference Engine: Llama 3 / 3.1 running locally via Ollama.
+## Features
 
-Embeddings Model: Nomic Embed Text (v1.5).
+- PDF upload and text extraction pipeline.
+- SHA-256 based file deduplication for uploaded documents.
+- Chunking and embedding workflow for document content.
+- Supabase/Postgres vector storage using pgvector/vecs.
+- FastAPI backend with document, user, health, and development routes.
+- React/Vite frontend for the application layer.
+- Architecture designed around user-owned document access and future API expansion.
 
-Vector Store: Supabase (PostgreSQL with pgvector extension).
+## Tech Stack
 
-Backend and Database
-API Framework: Python (FastAPI).
+- React, TypeScript, Vite, Tailwind CSS
+- FastAPI and Python
+- Supabase and PostgreSQL pgvector
+- Ollama for local LLM/embedding workflows
+- Docker Compose
 
-Database: Supabase for relational data, metadata storage, and vector embeddings.
+## Project Structure
 
-Authentication: Zero Auth for user identity management.
+- backend/app/main.py - FastAPI app setup and service initialization
+- backend/app/api - API routers for documents, users, health, and dev routes
+- backend/app/services - upload, embedding, and vector database services
+- backend/app/utils/pdf_processor.py - PDF processing utilities
+- src - React frontend
+- docker-compose.yml - containerized backend setup
 
-API Management: Kong Gateway for traffic control and future monetization.
+## Getting Started
 
-Frontend and Deployment
-Framework: React / Next.js.
+Install frontend dependencies:
 
-Deployment: Dockerized container environment.
+~~~bash
+npm install
+npm run dev
+~~~
 
-Data Logic and Privacy Constraints
-1:1 Ownership Model
-To maintain compliance with copyright regulations and ensure data privacy, the system enforces a strict isolation policy. Users are restricted to generating assessments only from documents they have personally uploaded. Access to other users' materials is prohibited.
+Set up backend environment variables:
 
-Unified Storage and Deduplication
-The backend implements SHA-256 hashing for file deduplication. Identical files uploaded by different users are stored as a single set of vector embeddings within Supabase to conserve resources. However, the system maintains distinct access control records in a junction table to preserve the 1:1 ownership rule, ensuring that a user can only query embeddings associated with their account.
+~~~bash
+DATABASE_URL=your_postgres_connection_string
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_supabase_anon_key
+SUPABASE_SERVICE_KEY=your_supabase_service_role_key
+OLLAMA_BASE_URL=http://localhost:11434
+~~~
 
-Development Roadmap
-Phase 1: MVP (Current Focus)
-Enable pgvector on Supabase and configure vector tables.
+Run the backend with Docker Compose or from the backend directory with Uvicorn after installing backend/requirements.txt.
 
-Implementation of the RAG pipeline (Ingest, Chunk, Embed, Store).
+## Roadmap
 
-PDF parsing and text extraction logic.
+- Complete the RAG ingest, chunk, embed, and store pipeline.
+- Generate multiple-choice and short-answer assessments from uploaded documents.
+- Add role-specific teacher/student workflows.
+- Expand toward a public API for educational datasets.
 
-Generation of MCQs and one-word answer assessments.
+## Status
 
-Phase 2: Application Layer
-User account differentiation (Teacher vs. Student) via Zero Auth integration.
-
-Automated grading for objective question types.
-
-Student mock examination mode.
-
-Phase 3: API Economy
-Exposure of classified question banks via Kong Gateway.
-
-Third-party developer access to the DaaS ecosystem.
+Capstone project in active development. The repo already contains the frontend, FastAPI service layer, vector database integration, upload service, and PDF processing foundations.
